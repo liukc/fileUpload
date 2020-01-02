@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<HTTPStatusCode>
+    <code id="200">
+        <status>200</status>
+        <msg>成功</msg>
+    </code>
+
+    <code>
+        <status>4000</status>
+        <msg>文件为空</msg>
+    </code>
+
+    <code>
+        <status>4001</status>
+        <msg>文件已存在</msg>
+    </code>
+
+    <code>
+        <status>5000</status>
+        <msg>数据库写入异常</msg>
+    </code>
+
+    <code>
+        <status>5001</status>
+        <msg>文件写入失败</msg>
+    </code>
+
+    <code>
+        <status>5002</status>
+        <msg>未知错误</msg>
+    </code>
+</HTTPStatusCode>
