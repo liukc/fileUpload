@@ -6,7 +6,11 @@ import java.util.Map;
 public class Detail {
     private int status;
     private String msg;
-    private String accessPath;
+    private Map map;
+
+    public Detail(){
+        map = new HashMap<String, Object>();
+    }
 
     public int getStatus() {
         return status;
@@ -24,11 +28,11 @@ public class Detail {
         this.msg = msg;
     }
 
-    public String getAccessPath() {
-        return accessPath;
+    public Map getMap() {
+        return map;
     }
 
-    public void setAccessPath(String accessPath) {
-        this.accessPath = accessPath;
+    public void setMap(Map map) {
+        this.map = map;
     }
 }

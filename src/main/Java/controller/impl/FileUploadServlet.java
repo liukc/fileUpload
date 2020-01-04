@@ -26,8 +26,8 @@ public class FileUploadServlet extends HttpServlet implements FileOperator {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status", detail.getStatus());
         jsonObject.put("msg", detail.getMsg());
-        jsonObject.put("accessPath", detail.getAccessPath());
-        response.setCharacterEncoding("utf-8");
+        jsonObject.put("result", detail.getMap());
+        response.setCharacterEncoding("GBK");
         response.getWriter().write(jsonObject.toString());
     }
 

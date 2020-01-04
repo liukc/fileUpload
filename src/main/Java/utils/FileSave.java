@@ -28,15 +28,8 @@ public class FileSave {
     }
 
     public String saveFile(FileItem fileItem) {
-        Properties properties = new Properties();
         String fileLocation = null;
-        try {
-            properties.load(new InputStreamReader(this.getClass().getResourceAsStream("/config/fileApplication.properties")));
-        } catch (IOException e) {
-            logger.error("配置文件读取异常...", e);
-            return null;
-        }
-        String path = properties.getProperty("file.upload.path");
+        String path = readProperties("file.upload.path");
         String f = UUID.randomUUID() + fileItem.getName().substring(fileItem.getName().lastIndexOf("."));
         try {
             fileItem.write(new File(path, f));
@@ -67,5 +60,21 @@ public class FileSave {
         byte[] md5Bytes = messageDigest.digest();
         BigInteger bigInteger = new BigInteger(1, md5Bytes);
         return bigInteger.toString();
+    }
+
+    /**
+     * 读取配置文件
+     * @param key 配置文件中的 key
+     * @return 返回对应的 value
+     */
+    public String readProperties(String key){
+        Properties properties = new Properties();
+        try(InputStreamReader inputStreamReader = new InputStreamReader(this.getClass().getResourceAsStream("/config/fileApplication.properties"))) {
+            properties.load(inputStreamReader);
+        } catch (IOException e) {
+            logger.error("配置文件读取异常...", e);
+            return null;
+        }
+       return properties.getProperty(key);
     }
 }

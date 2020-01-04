@@ -23,8 +23,9 @@ public class FilesDaoImpl implements FilesDao {
     @Override
     public void beforeConnection() {
         try {
-            if (connection == null || connection.isClosed())
+            if (connection == null || connection.isClosed()) {
                 connection = jdbc.getConnection();
+            }
             statement = connection.createStatement();
         } catch (SQLException e) {
             logger.error("建立数据库连接失败", e);
@@ -91,7 +92,7 @@ public class FilesDaoImpl implements FilesDao {
             if (resultSet.next()) {
                 res = resultSet.getInt("file_id");
             }
-            if (res == -1){
+            if (res == -1) {
                 res = 0;
             }
         } catch (SQLException e) {
@@ -109,7 +110,7 @@ public class FilesDaoImpl implements FilesDao {
         String sql = "select access_path from files_saving.file_information as f where f.file_id = " + id;
         try {
             resultSet = statement.executeQuery(sql);
-            if (resultSet.next()){
+            if (resultSet.next()) {
                 accessPath = resultSet.getString("access_path");
             }
         } catch (SQLException e) {
@@ -118,5 +119,27 @@ public class FilesDaoImpl implements FilesDao {
             afterConnection();
         }
         return accessPath;
+    }
+
+    @Override
+    public FileInformation getFileById(Integer id) {
+        beforeConnection();
+        FileInformation fileInformation = null;
+        String sql = "select file_name, content_type, size, access_path from files_saving.file_information as f where f.file_id = " + id;
+        try {
+            resultSet = statement.executeQuery(sql);
+            if (resultSet.next()) {
+                fileInformation = new FileInformation();
+                fileInformation.setFileName(resultSet.getString("file_name"));
+                fileInformation.setAccessPath(resultSet.getString("access_path"));
+                fileInformation.setContentType(resultSet.getString("content_type"));
+                fileInformation.setSize((long) resultSet.getDouble("size"));
+            }
+        } catch (SQLException e) {
+            logger.error("sql 执行异常...", e);
+        } finally {
+            afterConnection();
+        }
+        return fileInformation;
     }
 }

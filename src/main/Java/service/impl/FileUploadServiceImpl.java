@@ -65,25 +65,30 @@ public class FileUploadServiceImpl implements FileService {
                     fileInformation.setSize(fil.getSize());
                     fileInformation.setMd5(md5);
                     fileInformation.setRealPath(path);
-                    fileInformation.setAccessPath(path);            // 后续需要保存静态资源访问地址
+                    String accessPath = fileSave.readProperties("access.path");
+                    String[] paths = path.split("/");
+                    accessPath = accessPath + "/" + paths[paths.length - 1];
+                    fileInformation.setAccessPath(accessPath);            // 后续需要保存静态资源访问地址
                     if (filesDao.insertFile(fileInformation) == -1) {
+                        detail.setStatus(502);
+                        detail.setMsg("数据库异常");
+                    } else {
+                        fileInformation.setMd5(null);
+                        fileInformation.setRealPath(null);
+                        detail.setStatus(200);
+                        detail.setMsg("成功");
+                        detail.getMap().put("file", fileInformation);
+                    }
+                } else {                            // 文件存在
+//                    String accessPath = filesDao.getAccessPathById(res);
+                    FileInformation fileInformation = filesDao.getFileById(res);
+                    if (fileInformation == null) {
                         detail.setStatus(502);
                         detail.setMsg("数据库异常");
                     } else {
                         detail.setStatus(200);
                         detail.setMsg("成功");
-                        detail.setAccessPath(path);
-                    }
-
-                } else {                            // 文件存在
-                    String accessPath = filesDao.getAccessPathById(res);
-                    if (accessPath == null) {
-                        detail.setStatus(502);
-                        detail.setMsg("数据库异常");
-                    }else {
-                        detail.setStatus(200);
-                        detail.setMsg("成功");
-                        detail.setAccessPath(accessPath);
+                        detail.getMap().put("file", fileInformation);
                     }
 
                 }
